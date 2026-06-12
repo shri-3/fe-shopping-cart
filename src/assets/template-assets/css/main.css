@@ -1248,7 +1248,7 @@ input[type="radio"] .styled:checked + label::after {
   position: relative;
   margin: 0 auto 0px;
   padding: 0;
-  *zoom: 1;
+  zoom: 1;
 }
 .bx-wrapper img {
   max-width: 100%;
@@ -1595,9 +1595,8 @@ input[type="radio"] .styled:checked + label::after {
 .bootstrap-select.fit-width {
   width: auto !important;
 }
-.bootstrap-select:not([class*="col-"]):not([class*="form-control"]):not(
-    .input-group-btn
-  ) {
+.bootstrap-select:not([class="col-"]):not([class="form-control"])
+  :not(.input-group-btn) {
 }
 .bootstrap-select .dropdown-toggle:focus {
   outline: thin dotted #333 !important;
@@ -1871,7 +1870,7 @@ select.mobile-device {
   z-index: 10;
 }
 .noUi-stacking + .noUi-origin {
-  *z-index: -1;
+  z-index: -1;
 }
 .noUi-state-tap .noUi-origin {
   -webkit-transition:
@@ -7595,7 +7594,7 @@ header.header-style-5 .navbar li a:before {
 .noUi-stacking + .noUi-origin {
   /* Fix stacking order in IE7, which incorrectly
    creates a new context for the origins. */
-  *z-index: -1;
+  z-index: -1;
 }
 .noUi-state-tap .noUi-origin {
   -webkit-transition:
