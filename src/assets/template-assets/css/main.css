@@ -843,7 +843,7 @@ header .ownmenu .nav ul.dropdown-menu .indicator {
   margin-right: 5px;
 }
 .flex-direction-nav {
-  *height: 0;
+  height: 0;
 }
 .flex-direction-nav a {
   text-decoration: none;
@@ -940,7 +940,6 @@ header .ownmenu .nav ul.dropdown-menu .indicator {
   margin: 0 6px;
   display: inline-block;
   zoom: 1;
-  *display: inline;
 }
 .flex-control-paging li a {
   width: 11px;
@@ -1282,8 +1281,7 @@ input[type="radio"] .styled:checked + label::after {
 .bx-wrapper .bx-pager .bx-pager-item,
 .bx-wrapper .bx-controls-auto .bx-controls-auto-item {
   display: inline-block;
-  *zoom: 1;
-  *display: inline;
+  zoom: 1;
 }
 .bx-wrapper .bx-pager.bx-default-pager a {
   background: #d8d8d8;
