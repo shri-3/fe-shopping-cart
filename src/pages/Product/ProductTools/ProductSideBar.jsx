@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useDispatch } from "react-redux";
@@ -6,9 +6,17 @@ import {
   setPriceResults,
   setRatingResults,
   setProductResults,
+  setCategoryResults,
+  setShortPriceResults,
 } from "../../../redux/slices/search-product";
+import useFetch from "../../../hooks/useFetch";
+import { BE_BASE_URL } from "../../../api/apiService";
 
 const ProductSideBar = () => {
+  const { data, loading } = useFetch(`${BE_BASE_URL}/category`);
+
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedIds, setSelectedIds] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 940]);
   const dispatch = useDispatch();
 
@@ -22,7 +30,36 @@ const ProductSideBar = () => {
     dispatch(setPriceResults([]));
     dispatch(setRatingResults([]));
     dispatch(setProductResults([]));
+    dispatch(setCategoryResults([]));
+    dispatch(setShortPriceResults([]));
+    setSelectedIds([]);
+    setPriceRange([0, 940]);
+    setSelectedOption("");
   };
+
+  const handleCheckboxChange = (event) => {
+    const { value, checked } = event.target;
+
+    if (checked) {
+      // Add ID to array if checked
+      setSelectedIds([...selectedIds, value]);
+    } else {
+      // Remove ID from array if unchecked
+      setSelectedIds(selectedIds.filter((id) => id !== value));
+    }
+  };
+
+  const handleClickRadio = (e) => {
+    setSelectedOption(e.target.value);
+    dispatch(setShortPriceResults(Number(e.target.value)));
+  };
+
+  useEffect(() => {
+    // Dispatch the selected IDs to the Redux store whenever they change
+    dispatch(setCategoryResults(selectedIds));
+  }, [selectedIds, dispatch]);
+
+  if (loading) return null;
 
   return (
     <>
@@ -37,31 +74,19 @@ const ProductSideBar = () => {
           <h6>Categories</h6>
           <div className="checkbox checkbox-primary">
             <ul>
-              <li>
-                <input id="cate3" className="styled" type="checkbox" />
-                <label htmlFor="cate3"> Camera, Photo & Video</label>
-              </li>
-              <li>
-                <input id="cate4" className="styled" type="checkbox" />
-                <label htmlFor="cate4"> Cell Phones & Accessories</label>
-              </li>
-              <li>
-                <input id="cate5" className="styled" type="checkbox" />
-                <label htmlFor="cate5"> Headphones</label>
-              </li>
-              <li>
-                <input id="cate6" className="styled" type="checkbox" />
-                <label htmlFor="cate6"> Video Games</label>
-              </li>
-              <li>
-                <input id="cate7" className="styled" type="checkbox" />
-                <label htmlFor="cate7"> Bluetooth & Wireless Speakers</label>
-              </li>
-
-              <li>
-                <input id="cate9" className="styled" type="checkbox" />
-                <label htmlFor="cate9"> Computers & Tablets</label>
-              </li>
+              {data?.map((category, index) => (
+                <li key={`cate${index}`}>
+                  <input
+                    id={`cate${index}`}
+                    className="styled"
+                    type="checkbox"
+                    value={category._id}
+                    checked={selectedIds.includes(category._id)}
+                    onChange={handleCheckboxChange}
+                  />
+                  <label htmlFor={`cate${index}`}> {category.name} </label>
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -194,6 +219,15 @@ const ProductSideBar = () => {
           <div className="rating">
             <ul>
               <li>
+                <a onClick={() => dispatch(setRatingResults(5))}>
+                  <i className="fa fa-star"></i>
+                  <i className="fa fa-star"></i>
+                  <i className="fa fa-star"></i>
+                  <i className="fa fa-star"></i>
+                  <i className="fa fa-star"></i> <span>(21)</span>
+                </a>
+              </li>
+              <li>
                 <a onClick={() => dispatch(setRatingResults(4))}>
                   <i className="fa fa-star"></i>
                   <i className="fa fa-star"></i>
@@ -237,11 +271,25 @@ const ProductSideBar = () => {
           <div className="radio radio-primary">
             <ul>
               <li>
-                <input name="priceSort" className="" type="radio" />
+                <input
+                  name="priceSort"
+                  className=""
+                  type="radio"
+                  value="1"
+                  checked={selectedOption === "1"}
+                  onClick={handleClickRadio}
+                />
                 <label htmlFor="priceSort1"> Low to High</label>
               </li>
               <li>
-                <input name="priceSort" className="" type="radio" />
+                <input
+                  name="priceSort"
+                  className=""
+                  type="radio"
+                  value="-1"
+                  checked={selectedOption === "-1"}
+                  onClick={handleClickRadio}
+                />
                 <label htmlFor="priceSort2"> High to Low</label>
               </li>
             </ul>

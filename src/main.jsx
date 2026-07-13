@@ -5,6 +5,8 @@ import { RouterProvider } from "react-router";
 import router from "./routes/router";
 import { Provider } from "react-redux";
 import { store } from "./redux/store";
+import "../node_modules/react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const container = document.getElementById("root");
 if (container) {
@@ -12,6 +14,7 @@ if (container) {
   root.render(
     <StrictMode>
       <Provider store={store}>
+        <ToastContainer />
         <RouterProvider router={router} />
       </Provider>
     </StrictMode>,

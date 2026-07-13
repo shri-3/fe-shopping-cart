@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { toast } from "react-toastify";
 
 export const cartProductSlice = createSlice({
   name: "cartProduct",
@@ -12,16 +13,20 @@ export const cartProductSlice = createSlice({
       );
 
       if (!productExists) {
+        toast.success("Added to cart");
         state.cartProductsList.push({
           ...action.payload,
           quantity: action.payload.quantity ?? 1,
         });
+      } else {
+        toast.error("Already added to cart");
       }
     },
     removeFromCart(state, action) {
       state.cartProductsList = state.cartProductsList.filter(
         (product) => product._id !== action.payload._id,
       );
+      toast.error("Item removed from cart");
     },
     increment(state, action) {
       const product = state.cartProductsList.find(

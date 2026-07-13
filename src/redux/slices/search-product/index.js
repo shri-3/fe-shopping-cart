@@ -6,6 +6,8 @@ export const searchProductSlice = createSlice({
     searchResults: [],
     productResults: [],
     ratingResults: [],
+    categoryResults: [],
+    shortPriceResults: [],
   },
   reducers: {
     setPriceResults(state, action) {
@@ -17,15 +19,30 @@ export const searchProductSlice = createSlice({
     setRatingResults(state, action) {
       state.ratingResults = action.payload;
     },
+    setCategoryResults(state, action) {
+      state.categoryResults = action.payload;
+    },
+    setShortPriceResults(state, action) {
+      state.shortPriceResults = action.payload;
+    },
   },
 });
 
-export const { setPriceResults, setProductResults, setRatingResults } =
-  searchProductSlice.actions;
+export const {
+  setPriceResults,
+  setProductResults,
+  setRatingResults,
+  setCategoryResults,
+  setShortPriceResults,
+} = searchProductSlice.actions;
 
 export const selectSearchResults = (state) => state.searchProduct.searchResults;
 export const selectProductResults = (state) =>
   state.searchProduct.productResults;
 export const selectRatingResults = (state) => state.searchProduct.ratingResults;
+export const selectCategoryResults = (state) =>
+  state.searchProduct.categoryResults;
+export const selectShortPriceResults = (state) =>
+  state.searchProduct.shortPriceResults;
 
 export default searchProductSlice.reducer;

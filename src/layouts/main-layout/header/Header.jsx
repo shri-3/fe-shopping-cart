@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import logo from "../../../assets/template-assets/images/logo.png";
 import MenuBar from "./MenuBar";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import {
   selectProductResults,
@@ -14,17 +14,28 @@ const Header = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearchTerm = useDebounce(searchTerm, 2000);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const count = useSelector(
     (state) => state.cartProduct.cartProductsList.length,
   );
   const handelChangeSearch = (e) => {
     setSearchTerm(e.target.value);
   };
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const trimmed = searchTerm.trim();
+    if (!trimmed) return;
+    dispatch(setProductResults(trimmed));
+    navigate("/product");
+  };
+
   useEffect(() => {
     if (debouncedSearchTerm) {
       dispatch(setProductResults(debouncedSearchTerm));
     }
   }, [debouncedSearchTerm, dispatch]);
+
   useEffect(() => {
     if (productsSearch.length === 0) {
       setSearchTerm(""); // safe here, runs only when productsSearch changes
@@ -40,20 +51,7 @@ const Header = () => {
               <img src={logo} alt="" />
             </Link>
           </div>
-          <div className="search-cate">
-            {/* <select className="selectpicker" name="searchBar">
-              <option> All Categories</option>
-              <option> Home Audio & Theater</option>
-              <option> TV & Video</option>
-              <option> Camera, Photo & Video</option>
-              <option> Cell Phones & Accessories</option>
-              <option> Headphones</option>
-              <option> Video Games</option>
-              <option> Bluetooth & Wireless </option>
-              <option> Gaming Console</option>
-              <option> Computers & Tablets</option>
-              <option> Monitors </option>
-            </select> */}
+          <form className="search-cate" onSubmit={handleSearchSubmit}>
             <input
               type="search"
               name="searchInput"
@@ -64,7 +62,7 @@ const Header = () => {
             <button className="submit" type="submit">
               <i className="icon-magnifier"></i>
             </button>
-          </div>
+          </form>
 
           {/* !-- Cart Part -- */}
           <ul className="nav navbar-right cart-pop">

@@ -1,38 +1,21 @@
 /**
- * Build a search URL with query parameters, automatically removing empty ones
- * @param {string} baseUrl - Base API endpoint (e.g., "/api/products/search")
+ * Build a POST search payload by removing empty values
  * @param {object} params - Object with search parameters
- * @returns {string} Complete URL with only non-empty parameters
- *
- * @example
- * buildSearchUrl("/api/products/search", {
- *   name: "phone",
- *   price: 499.99,
- *   rating: "", // empty, will be removed
- *   minPrice: 100,
- *   maxPrice: 500
- * })
- * // Returns: "/api/products/search?name=phone&price=499.99&minPrice=100&maxPrice=500"
+ * @returns {object} Object with only non-empty parameters
  */
-export const buildSearchUrl = (baseUrl, params = {}) => {
-  const searchParams = new URLSearchParams();
-
-  // Add only non-empty parameters
-  Object.entries(params).forEach(([key, value]) => {
-    // Skip if value is null, undefined, empty string, NaN, or empty array
-    if (
-      value !== null &&
-      value !== undefined &&
-      value !== "" &&
-      !Number.isNaN(value) &&
-      !(Array.isArray(value) && value.length === 0)
-    ) {
-      searchParams.append(key, value);
-    }
-  });
-
-  const queryString = searchParams.toString();
-  return queryString ? `${baseUrl}?${queryString}` : baseUrl;
+export const buildSearchUrl = (params = {}) => {
+  return Object.fromEntries(
+    Object.entries(params).filter(([_, value]) => {
+      const isEmptyArray = Array.isArray(value) && value.length === 0;
+      return (
+        value !== null &&
+        value !== undefined &&
+        value !== "" &&
+        !Number.isNaN(value) &&
+        !isEmptyArray
+      );
+    }),
+  );
 };
 
 /**

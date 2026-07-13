@@ -6,14 +6,13 @@ import {
   removeFromCart,
   clearCart,
   selectCartSubtotal,
+  selectCartProducts,
 } from "../../redux/slices/cart-product";
 import { Link } from "react-router";
 import OrderSuccess from "./OrderSuccess";
 
 const ShoppingCart = () => {
-  const cartProducts = useSelector(
-    (state) => state.cartProduct.cartProductsList,
-  );
+  const cartProducts = useSelector(selectCartProducts);
   const dispatch = useDispatch();
   const totalSum = useSelector(selectCartSubtotal);
 
@@ -151,7 +150,7 @@ const ShoppingCart = () => {
                 </Link>
                 {cartProducts.length > 0 && (
                   <a onClick={handelSuccess} className="btn-round">
-                    Place Order
+                    Checkout
                   </a>
                 )}
               </div>

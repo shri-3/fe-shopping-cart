@@ -837,12 +837,19 @@ section {
   width: 100%;
   margin: 7px 0;
   font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .product article .tittle {
   color: #0168b8;
   font-size: 14px;
-  display: inline-block;
   min-height: 40px;
+  /* display: inline-block; */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 .product article .tittle:hover {
   color: #333;
@@ -891,15 +898,17 @@ section {
   left: 9px;
 }
 .product article .cart-btn {
-  height: 42px;
-  width: 42px;
+  height: 40px;
+  width: 40px;
   border-radius: 50%;
   background: #eeeeee;
   color: #888888 !important;
   float: right;
   text-align: center;
   line-height: 44px;
-  margin-top: -15px;
+  margin-top: -10px;
+  margin-right: 5px;
+  cursor: pointer;
 }
 .product article .cart-btn:hover {
   background: #0168b8;

@@ -1,57 +1,116 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import ProductShortList from "./ProductShortList";
 import { Link } from "react-router";
-// import useFetch from "../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/slices/cart-product";
 import {
   selectProductResults,
   selectRatingResults,
   selectSearchResults,
+  selectCategoryResults,
+  selectShortPriceResults,
 } from "../../../redux/slices/search-product";
-import useFetch from "../../../hooks/useFetch";
 import { buildSearchUrl } from "../../../utils/buildSearchUrl";
 import { BE_BASE_URL } from "../../../api/apiService";
+import { toast } from "react-toastify";
 
 const ProductList = () => {
   const baseURL = `${BE_BASE_URL}/products`;
-  const [searchURL, setSearchURL] = useState(baseURL);
-  const { data, loading, error, refetch } = useFetch(searchURL);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   const count = useSelector((state) => state.cartProduct);
 
   const getPrice = useSelector(selectSearchResults);
   const productsSearch = useSelector(selectProductResults);
   const ratingResults = useSelector(selectRatingResults);
+  const categoryResults = useSelector(selectCategoryResults);
+  const shortByPrice = useSelector(selectShortPriceResults);
 
   const dispatch = useDispatch();
 
+  const renderStars = (rating) => {
+    const value = Number(rating) || 0;
+    const filledStars = Math.round(Math.max(0, Math.min(5, value)));
+    return Array.from({ length: 5 }, (_, index) => (
+      <i
+        key={index}
+        className={`fa ${index < filledStars ? "fa-star" : "fa-star-o"}`}
+      ></i>
+    ));
+  };
+
   useEffect(() => {
-    const hasData = (arr) => Array.isArray(arr) && arr.length > 0;
+    const fetchProducts = async () => {
+      setLoading(true);
+      setError("");
 
-    let url = baseURL;
+      try {
+        const searchParams = {
+          name: productsSearch,
+          rating: ratingResults,
+          minPrice: getPrice?.[0],
+          maxPrice: getPrice?.[1],
+          categoryId: categoryResults,
+          priceShort: shortByPrice,
+        };
 
-    if (
-      productsSearch.length > 0 ||
-      hasData(getPrice) ||
-      ratingResults.length > 0
-    ) {
-      const searchParams = {
-        name: productsSearch,
-        rating: ratingResults,
-        minPrice: getPrice[0],
-        maxPrice: getPrice[1],
-      };
+        const payload = buildSearchUrl(searchParams);
 
-      // Build the search URL with only non-empty parameters and if any of the parameters "searchParams" are empty auto-removed
-      url = buildSearchUrl(`${baseURL}/search`, searchParams);
-    }
+        if (Object.keys(payload).length > 0) {
+          const response = await axios.post(`${baseURL}/search`, payload);
+          setData(response.data);
+        } else {
+          const response = await axios.get(baseURL);
+          setData(response.data);
+        }
+      } catch (err) {
+        setError(err.message || "Unable to load products");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    // Only update if URL actually changed
-    if (url !== searchURL) {
-      setSearchURL(url);
-    }
-  }, [getPrice, productsSearch, ratingResults, searchURL]);
+    fetchProducts();
+  }, [
+    getPrice,
+    productsSearch,
+    ratingResults,
+    categoryResults,
+    baseURL,
+    shortByPrice,
+  ]);
+
+  // Wishlist handler
+  const handelAddWishlist = async (id) => {
+    // Add wishlist API call here
+    const proId = { productId: id };
+    fetch(`${BE_BASE_URL}/wishlist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(proId),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errData = await response.json();
+          //  Throwing just the message string makes it cleaner to catch
+          throw new Error(errData.error || "Failed to add item to wishlist");
+        }
+        // CRUCIAL: You must keep this return for successful responses!
+        return response.json();
+      })
+      .then((data) => {
+        toast.success("Added to wishlist");
+      })
+      .catch((err) => {
+        // FIX: Use err.message to get just the text string without "Error:"
+        toast.error(err.message);
+      });
+  };
 
   const listItems = [];
   for (let i = 0; i < data.length; i++) {
@@ -65,22 +124,27 @@ const ProductList = () => {
             alt=""
           />
           <span className="sale-tag">-25%</span>
-          <span className="tag">Tablets</span>
+          <span className="tag">{data[i].categoryId.name}</span>
           <Link to={`/product/${data[i]._id}`} className="tittle">
             {data[i].name}
           </Link>
           <p className="rev">
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i>
-            <i className="fa fa-star"></i> <i className="fa fa-star"></i>
-            <span className="margin-left-10">5 Review(s)</span>
+            {renderStars(data[i].rating)}
+            <span className="margin-left-10">
+              {data[i].reviews?.length ?? 0} Review(s)
+            </span>
           </p>
           <div className="price">
             ${data[i].price}.00 {/* <span>$200.00</span> */}
           </div>
           <a className="cart-btn" onClick={() => dispatch(addToCart(data[i]))}>
             <i className="icon-basket-loaded"></i>
+          </a>
+          <a
+            className="cart-btn"
+            onClick={() => handelAddWishlist(data[i]._id)}
+          >
+            <i className="fa fa-heart"></i>
           </a>
         </article>
       </div>,
