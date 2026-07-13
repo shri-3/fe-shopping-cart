@@ -267,7 +267,7 @@ const ProductSideBar = () => {
           </div>
 
           {/* Price radio Buttons */}
-          <h6>Short By Price</h6>
+          <h6>Sort By Price</h6>
           <div className="radio radio-primary">
             <ul>
               <li>
