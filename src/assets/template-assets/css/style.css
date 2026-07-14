@@ -783,6 +783,18 @@ section {
 /*=======================================================
       Shipping info
 ========================================================*/
+.shipping-featur-info li {
+  list-style: none;
+  float: left;
+  width: 14% !important;
+  padding: 40px 0;
+  padding-left: 30px;
+  padding-bottom: 40px;
+  border-right: 1px solid #eeeeee;
+}
+.shipping-featur-info .header-tab {
+  width: auto !important;
+}
 .shipping-info li {
   list-style: none;
   float: left;
@@ -792,6 +804,34 @@ section {
   padding-bottom: 40px;
   border-right: 1px solid #eeeeee;
 }
+.shipping-featur-info .catlog {
+  display: flex;
+  width: 100%;
+  margin: 0;
+  padding: 10px 0px;
+  border: 1px solid #eeeeee;
+  border-radius: 4px;
+  overflow: hidden;
+  list-style: none;
+  float: left;
+  cursor: pointer;
+}
+.shipping-featur-info .catlog li {
+  flex: 1 1 auto; /* Arranges width automatically based on text length */
+  display: flex;
+  align-items: center; /* Centers short text vertically */
+  justify-content: center; /* Centers text horizontally */
+  text-align: center;
+  padding: 40px 10px; /* Your 40px padding lives here now so heights stay uniform */
+  font-weight: bold;
+  font-size: 14px;
+}
+
+/* Adds the separator lines between items cleanly */
+.shipping-featur-info .catlog li:not(:last-child) {
+  border-right: 1px solid #eeeeee;
+}
+
 .shipping-info li:nth-last-child(1) {
   border-right: none;
 }
@@ -819,6 +859,9 @@ section {
   width: 100%;
   margin-bottom: 0px;
   border: 1px solid #dddddd;
+}
+.-mb-6 {
+  margin-bottom: -6px !important;
 }
 /*=======================================================
       Product items

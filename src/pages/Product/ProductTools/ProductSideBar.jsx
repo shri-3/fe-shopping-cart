@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   setPriceResults,
   setRatingResults,
@@ -15,10 +15,13 @@ import { BE_BASE_URL } from "../../../api/apiService";
 const ProductSideBar = () => {
   const { data, loading } = useFetch(`${BE_BASE_URL}/category`);
 
-  const [selectedOption, setSelectedOption] = useState("");
-  const [selectedIds, setSelectedIds] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 940]);
   const dispatch = useDispatch();
+  const getCatId = useSelector((state) => state.searchProduct.categoryResults);
+
+  const [selectedOption, setSelectedOption] = useState("");
+  const [selectedIds, setSelectedIds] = useState(getCatId || []);
+  const [priceRange, setPriceRange] = useState([0, 940]);
+  const isInitialMount = useRef(true);
 
   const handlePriceChange = (value) => {
     setPriceRange(value);
@@ -55,7 +58,12 @@ const ProductSideBar = () => {
   };
 
   useEffect(() => {
-    // Dispatch the selected IDs to the Redux store whenever they change
+    // Skip dispatching on initial mount to preserve Redux state from navigation
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    // Only dispatch when user manually changes selections
     dispatch(setCategoryResults(selectedIds));
   }, [selectedIds, dispatch]);
 

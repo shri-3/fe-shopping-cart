@@ -6,9 +6,12 @@ import "swiper/css/navigation";
 import useFetch from "../../../hooks/useFetch";
 import { Link } from "react-router";
 import { BE_BASE_URL } from "../../../api/apiService";
+import { addToCart } from "../../../redux/slices/cart-product";
+import { useDispatch } from "react-redux";
 
 const FeaturProduct = ({ message }) => {
   const { data, loading } = useFetch(`${BE_BASE_URL}/feature-products`);
+  const dispatch = useDispatch();
 
   if (loading) return null;
 
@@ -53,7 +56,10 @@ const FeaturProduct = ({ message }) => {
                         alt={product.productId.name}
                       />
                       <span className="tag">Latop</span>
-                      <Link to={`/product`} className="tittle">
+                      <Link
+                        to={`/product/${product.productId._id}`}
+                        className="tittle"
+                      >
                         {product.productId.name}
                       </Link>
                       <p className="rev">
@@ -65,7 +71,11 @@ const FeaturProduct = ({ message }) => {
                         <span className="margin-left-10">5 Review(s)</span>
                       </p>
                       <div className="price">${product.productId.price}.00</div>
-                      <a href="#." className="cart-btn">
+                      <a
+                        href="#."
+                        className="cart-btn"
+                        onClick={() => dispatch(addToCart(product.productId))}
+                      >
                         <i className="icon-basket-loaded"></i>
                       </a>
                     </article>

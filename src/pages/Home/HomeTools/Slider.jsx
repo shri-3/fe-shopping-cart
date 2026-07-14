@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import slider1 from "../../../assets/template-assets/images/slider-img-1.jpg";
 import slider2 from "../../../assets/template-assets/images/slider-img-2.jpg";
 import slider3 from "../../../assets/template-assets/images/slider-img-3.jpg";
+import { Link } from "react-router";
 
 const Slider = () => {
   const sliderRef = useRef(null);
@@ -272,9 +273,9 @@ const Slider = () => {
                           data-scrolloffset="0"
                           style={{ zIndex: 8 }}
                         >
-                          <a href="#." class="btn-round big">
-                            Shop Now
-                          </a>{" "}
+                          <Link to="/product" class="btn-round big">
+                            Shop now
+                          </Link>
                         </div>
                       </li>
 
@@ -420,9 +421,9 @@ const Slider = () => {
                           data-scrolloffset="0"
                           style={{ zIndex: 8 }}
                         >
-                          <a href="#." class="btn-round big">
-                            Shop Now
-                          </a>{" "}
+                          <Link to="/product" class="btn-round big">
+                            Shop now
+                          </Link>
                         </div>
                       </li>
 
@@ -568,9 +569,9 @@ const Slider = () => {
                           data-scrolloffset="0"
                           style={{ zIndex: 8 }}
                         >
-                          <a href="#." class="btn-round big">
-                            Shop Now
-                          </a>{" "}
+                          <Link to="/product" class="btn-round big">
+                            Shop now
+                          </Link>
                         </div>
                       </li>
                     </ul>
@@ -597,9 +598,9 @@ const Slider = () => {
                     Weekly <span>Sale!</span>
                   </h4>
                   <p>Saving up to 50% off all online store items this week.</p>
-                  <a href="#." class="btn-round">
+                  <Link to="/product" class="btn-round">
                     Shop now
-                  </a>{" "}
+                  </Link>
                 </div>
               </div>
             </div>

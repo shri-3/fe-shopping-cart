@@ -5,6 +5,7 @@ import FeaturProduct from "../../Home/HomeTools/FeaturProduct";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/slices/cart-product";
 import { BE_BASE_URL } from "../../../api/apiService";
+import { toast } from "react-toastify";
 
 const ProductDetailsList = () => {
   const dispatch = useDispatch();
@@ -30,17 +31,21 @@ const ProductDetailsList = () => {
       },
       body: JSON.stringify(proId),
     })
-      .then((response) => {
+      .then(async (response) => {
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const errData = await response.json();
+          //  Throwing just the message string makes it cleaner to catch
+          throw new Error(errData.error || "Failed to add item to wishlist");
         }
+        // CRUCIAL: You must keep this return for successful responses!
         return response.json();
       })
       .then((data) => {
-        console.log("Added to wishlist:", data);
+        toast.success("Added to wishlist");
       })
-      .catch((error) => {
-        console.error("Error adding to wishlist:", error);
+      .catch((err) => {
+        // FIX: Use err.message to get just the text string without "Error:"
+        toast.error(err.message);
       });
   };
 

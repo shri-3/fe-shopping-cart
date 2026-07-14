@@ -3,6 +3,7 @@ import Slider from "./HomeTools/Slider";
 import ShippingInfo from "./HomeTools/ShippingInfo";
 import FeaturProduct from "./HomeTools/FeaturProduct";
 import TopSelling from "./HomeTools/TopSelling";
+import FeatureCategory from "./HomeTools/FeaturCategory";
 
 function Home() {
   return (
@@ -10,6 +11,7 @@ function Home() {
       <Slider />
       <div id="content">
         <ShippingInfo />
+        <FeatureCategory />
         <FeaturProduct />
         {/* <TopSelling /> */}
       </div>

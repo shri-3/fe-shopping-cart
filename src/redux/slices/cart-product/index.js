@@ -8,19 +8,23 @@ export const cartProductSlice = createSlice({
   },
   reducers: {
     addToCart(state, action) {
-      const productExists = state.cartProductsList.some(
+      // 1. Find the item if it already exists in the cart
+      const productExists = state.cartProductsList.find(
         (product) => product._id === action.payload._id,
       );
 
-      if (!productExists) {
-        toast.success("Added to cart");
+      if (productExists) {
+        // 2. If it exists, increase its quantity by 1
+        productExists.quantity += 1;
+      } else {
+        // 3. If it is new, push it with a default quantity of 1
         state.cartProductsList.push({
           ...action.payload,
           quantity: action.payload.quantity ?? 1,
         });
-      } else {
-        toast.error("Already added to cart");
       }
+      // 4. Show the success message for both scenarios
+      toast.success("Added to cart");
     },
     removeFromCart(state, action) {
       state.cartProductsList = state.cartProductsList.filter(
@@ -34,6 +38,7 @@ export const cartProductSlice = createSlice({
       );
       if (product) {
         product.quantity += 1;
+        toast.success("Quantity Increased");
       }
     },
     decrement(state, action) {
@@ -45,10 +50,12 @@ export const cartProductSlice = createSlice({
       // If quantity is greater than 1, decrement. Otherwise remove the product.
       if (product.quantity > 1) {
         product.quantity -= 1;
+        toast.warn("Quantity Decreased");
       } else {
         state.cartProductsList = state.cartProductsList.filter(
           (p) => p._id !== action.payload._id,
         );
+        toast.error("Item removed from cart");
       }
     },
     clearCart(state) {

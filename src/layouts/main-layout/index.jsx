@@ -9,6 +9,8 @@ import { useLocation } from "react-router";
 const MainLayout = ({ children }) => {
   const { pathname } = useLocation();
   useEffect(() => {
+    window.scrollTo(0, 0); // Instant jump to the top
+
     var loadScriptsSequentially = async () => {
       for (const src of scriptJS) {
         await new Promise((resolve, reject) => {
