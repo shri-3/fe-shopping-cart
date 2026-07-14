@@ -10,6 +10,9 @@ const WishlistLazy = lazy(() => import("../pages/Wishlist/Wishlist"));
 const ShoppingCartLazy = lazy(
   () => import("../pages/ShoppingCart/ShoppingCart"),
 );
+const OrderHistoryLazy = lazy(
+  () => import("../pages/OrderHistory/OrderHistory"),
+);
 
 const HomeRoutes = {
   path: "/",
@@ -38,6 +41,10 @@ const HomeRoutes = {
     {
       path: "/cart",
       element: <ShoppingCartLazy />,
+    },
+    {
+      path: "/order-history",
+      element: <OrderHistoryLazy />,
     },
   ],
 };

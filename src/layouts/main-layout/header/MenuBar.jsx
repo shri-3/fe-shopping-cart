@@ -297,6 +297,9 @@ const MenuBar = () => {
               <li>
                 <Link to="/cart">Cart </Link>
               </li>
+              <li>
+                <Link to="/order-history">Order </Link>
+              </li>
               {/* <li className="dropdown">
                 {" "}
                 <a

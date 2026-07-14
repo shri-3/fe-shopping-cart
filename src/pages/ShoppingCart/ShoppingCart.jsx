@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrement,
@@ -10,6 +10,8 @@ import {
 } from "../../redux/slices/cart-product";
 import { Link } from "react-router";
 import OrderSuccess from "./OrderSuccess";
+import { BE_BASE_URL } from "../../api/apiService";
+import { toast } from "react-toastify";
 
 const ShoppingCart = () => {
   const cartProducts = useSelector(selectCartProducts);
@@ -17,11 +19,62 @@ const ShoppingCart = () => {
   const totalSum = useSelector(selectCartSubtotal);
 
   const [orderConfirmed, setOrderConfirmed] = useState(false);
+  const [orderUpdateData, setOrderUpdateData] = useState({
+    userId: "6a0d9f63492c3f5603b807ab",
+    products: [],
+  });
+
+  const baseURL = `${BE_BASE_URL}/order-history`;
+
+  const addProductsToOrder = (newProductsArray) => {
+    // setOrderUpdateData((prevOrder) => ({
+    //   ...prevOrder, // Copy all existing object fields (like userId)
+    //   products: [
+    //     ...prevOrder.products, // Copy all existing items in the array
+    //     ...newProductsArray, // Spread and append the new array elements
+    //   ],
+    // }));
+    setOrderUpdateData((prevOrder) => ({
+      ...prevOrder,
+      products: newProductsArray, // Direct overwrite removes duplication completely
+    }));
+  };
+
+  useEffect(() => {
+    addProductsToOrder(cartProducts);
+  }, [cartProducts]);
+
+  const handelSaveOrderHistory = () => {
+    // implement logic to save order History to backend
+    fetch(`${baseURL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(orderUpdateData),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errData = await response.json();
+          //  Throwing just the message string makes it cleaner to catch
+          throw new Error(errData.error || "Failed to add item to wishlist");
+        }
+        // CRUCIAL: You must keep this return for successful responses!
+        return response.json();
+      })
+      .then((data) => {
+        toast.success("Order Placed Successfully");
+        setOrderConfirmed(true);
+        dispatch(clearCart());
+      })
+      .catch((err) => {
+        // FIX: Use err.message to get just the text string without "Error:"
+        toast.error(err.message);
+      });
+  };
 
   const handelSuccess = () => {
-    setOrderConfirmed(true);
-    // Optionally, you can also clear the cart here if you want to reset it after order confirmation
-    dispatch(clearCart());
+    handelSaveOrderHistory();
   };
 
   return (
