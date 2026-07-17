@@ -59,14 +59,21 @@ const ProductList = () => {
 
         const payload = buildSearchUrl(searchParams);
 
+        let response;
         if (Object.keys(payload).length > 0) {
-          const response = await axios.post(`${baseURL}/search`, payload);
-          setData(response.data);
+          response = await axios.post(`${baseURL}/search`, payload);
         } else {
-          const response = await axios.get(baseURL);
-          setData(response.data);
+          response = await axios.get(baseURL);
         }
+
+        // Handle nested data structure
+        const productsData = Array.isArray(response.data)
+          ? response.data
+          : response.data?.data || response.data?.products || [];
+
+        setData(productsData);
       } catch (err) {
+        console.error("Error fetching products:", err);
         setError(err.message || "Unable to load products");
       } finally {
         setLoading(false);
@@ -154,36 +161,73 @@ const ProductList = () => {
     <div className="col-md-9">
       <ProductShortList />
 
-      <div className="item-col-4">
-        {/* ### Product 1 */}
-        {listItems}
-        {/* pagination */}
-        <div className="col-md-12">
-          <ul className="pagination">
-            <li>
-              <Link to="#" aria-label="Previous">
-                <i className="fa fa-angle-left"></i>
-              </Link>
-            </li>
-            <li>
-              <a className="active" href="#">
-                1
-              </a>
-            </li>
-            <li>
-              <a href="#">2</a>
-            </li>
-            <li>
-              <a href="#">3</a>
-            </li>
-            <li>
-              <a href="#" aria-label="Next">
-                <i className="fa fa-angle-right"></i>
-              </a>
-            </li>
-          </ul>
+      {/* Show loading state */}
+      {loading && (
+        <div className="item-col-4">
+          <p style={{ textAlign: "center", padding: "20px", fontSize: "16px" }}>
+            Loading products...
+          </p>
         </div>
-      </div>
+      )}
+
+      {/* Show error state */}
+      {error && (
+        <div className="item-col-4">
+          <p
+            style={{
+              textAlign: "center",
+              padding: "20px",
+              color: "red",
+              fontSize: "16px",
+            }}
+          >
+            Error: {error}
+          </p>
+        </div>
+      )}
+
+      {/* Show "no products" state */}
+      {!loading && !error && data.length === 0 && (
+        <div className="item-col-4">
+          <p style={{ textAlign: "center", padding: "20px", fontSize: "16px" }}>
+            No products found.
+          </p>
+        </div>
+      )}
+
+      {/* Show products */}
+      {!loading && !error && data.length > 0 && (
+        <div className="item-col-4">
+          {/* ### Product 1 */}
+          {listItems}
+          {/* pagination */}
+          <div className="col-md-12">
+            <ul className="pagination">
+              <li>
+                <Link to="#" aria-label="Previous">
+                  <i className="fa fa-angle-left"></i>
+                </Link>
+              </li>
+              <li>
+                <a className="active" href="#">
+                  1
+                </a>
+              </li>
+              <li>
+                <a href="#">2</a>
+              </li>
+              <li>
+                <a href="#">3</a>
+              </li>
+              <li>
+                <a href="#" aria-label="Next">
+                  <i className="fa fa-angle-right"></i>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

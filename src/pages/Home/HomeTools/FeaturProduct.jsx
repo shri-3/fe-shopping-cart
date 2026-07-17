@@ -3,6 +3,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Navigation } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
+import "./FeaturProduct.css";
 import useFetch from "../../../hooks/useFetch";
 import { Link } from "react-router";
 import { BE_BASE_URL } from "../../../api/apiService";
@@ -55,7 +56,9 @@ const FeaturProduct = ({ message }) => {
                         src={product.productId.imageUrl}
                         alt={product.productId.name}
                       />
-                      <span className="tag">Latop</span>
+                      <span className="tag">
+                        {product?.productId?.categoryId?.name}
+                      </span>
                       <Link
                         to={`/product/${product.productId._id}`}
                         className="tittle"
@@ -70,14 +73,18 @@ const FeaturProduct = ({ message }) => {
                         <i className="fa fa-star-o"></i>
                         <span className="margin-left-10">5 Review(s)</span>
                       </p>
-                      <div className="price">${product.productId.price}.00</div>
-                      <a
-                        href="#."
-                        className="cart-btn"
-                        onClick={() => dispatch(addToCart(product.productId))}
-                      >
-                        <i className="icon-basket-loaded"></i>
-                      </a>
+                      <div>
+                        <div className="price">
+                          ${product.productId.price}.00
+                        </div>
+                        <a
+                          href="#."
+                          className="cart-btn"
+                          onClick={() => dispatch(addToCart(product.productId))}
+                        >
+                          <i className="icon-basket-loaded"></i>
+                        </a>
+                      </div>
                     </article>
                   </div>
                 </SwiperSlide>

@@ -38,19 +38,19 @@ const ProductList = () => {
           <div
             className="wishlist-remove text-right"
             // onClick={() => dispatch(removeFromCart(product))}
-            onClick={() => setGetId(product._id)}
+            onClick={() => setGetId(product?._id)}
           >
             <i className="fa fa-close"></i>
           </div>
           <img
             className="img-responsive"
-            src={product.productId.imageUrl}
+            src={product?.productId?.imageUrl}
             alt=""
           />
           <span className="sale-tag">-25%</span>
           <span className="tag">Tablets</span>
           <Link to="/product/1" className="tittle">
-            {product.productId.name}
+            {product?.productId?.name}
           </Link>
           <p className="rev">
             <i className="fa fa-star"></i>
@@ -60,7 +60,7 @@ const ProductList = () => {
             <span className="margin-left-10">5 Review(s)</span>
           </p>
           <div className="price">
-            ${product.productId.price}.00 {/* <span>$200.00</span> */}
+            ${product?.productId?.price}.00 {/* <span>$200.00</span> */}
           </div>
           <a
             // href="#."

@@ -9,8 +9,9 @@ import {
   selectCartSubtotal,
   selectCartProducts,
 } from "../../redux/slices/cart-product";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import OrderSuccess from "./OrderSuccess";
+import Checkout from "./Checkout";
 import { BE_BASE_URL } from "../../api/apiService";
 import { toast } from "react-toastify";
 import useFetch from "../../hooks/useFetch";
@@ -19,84 +20,37 @@ const ShoppingCart = () => {
   const cartProducts = useSelector(selectCartProducts);
   const dispatch = useDispatch();
   const totalSum = useSelector(selectCartSubtotal);
+  const navigate = useNavigate();
 
-  const [orderConfirmed, setOrderConfirmed] = useState(false);
-  const [orderUpdateData, setOrderUpdateData] = useState({
-    userId: "6a0d9f63492c3f5603b807ab",
-    products: [],
-  });
+  const [currentPage, setCurrentPage] = useState("cart"); // cart, checkout, or success
 
-  const baseURL = `${BE_BASE_URL}/order-history`;
-  const { data, loading, error, refetch } = useFetch(
-    `${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`,
-  );
+  const handleCheckout = () => {
+    if (cartProducts.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+    setCurrentPage("checkout");
+  };
+
+  const handleOrderPlaced = () => {
+    setCurrentPage("success");
+  };
+
+  // Fetch user profile data for default address
+  const { data } = useFetch(`${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`);
   const filteredAddresses = data?.data?.address?.filter(
     (addr) => addr._id == data?.data?.primaryAddress,
   );
   const DeliverdAddress = filteredAddresses?.[0];
-  console.log(data);
-  console.log(filteredAddresses);
-
-  const addProductsToOrder = (newProductsArray) => {
-    // setOrderUpdateData((prevOrder) => ({
-    //   ...prevOrder, // Copy all existing object fields (like userId)
-    //   products: [
-    //     ...prevOrder.products, // Copy all existing items in the array
-    //     ...newProductsArray, // Spread and append the new array elements
-    //   ],
-    // }));
-    setOrderUpdateData((prevOrder) => ({
-      ...prevOrder,
-      products: newProductsArray, // Direct overwrite removes duplication completely
-    }));
-  };
-
-  useEffect(() => {
-    addProductsToOrder(cartProducts);
-  }, [cartProducts]);
-
-  const handelSaveOrderHistory = () => {
-    // implement logic to save order History to backend
-    fetch(`${baseURL}`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(orderUpdateData),
-    })
-      .then(async (response) => {
-        if (!response.ok) {
-          const errData = await response.json();
-          //  Throwing just the message string makes it cleaner to catch
-          throw new Error(errData.error || "Failed to add item to wishlist");
-        }
-        // CRUCIAL: You must keep this return for successful responses!
-        return response.json();
-      })
-      .then((data) => {
-        toast.success("Order Placed Successfully");
-        setOrderConfirmed(true);
-        dispatch(clearCart());
-      })
-      .catch((err) => {
-        // FIX: Use err.message to get just the text string without "Error:"
-        toast.error(err.message);
-      });
-  };
-
-  const handelSuccess = () => {
-    handelSaveOrderHistory();
-  };
 
   return (
     <div id="content">
-      {!orderConfirmed ? (
+      {currentPage === "cart" && (
         <>
           {/* Ship Process  */}
           <div className="ship-process padding-top-30 padding-bottom-30">
             <div className="container">
               <ul className="row">
-                {/* Step 1 */}
                 <li className="col-sm-3 current">
                   <div className="media-left">
                     <i className="flaticon-shopping"></i>
@@ -106,12 +60,30 @@ const ShoppingCart = () => {
                     <h6>Shopping Cart</h6>
                   </div>
                 </li>
+                <li className="col-sm-3 ">
+                  <div className="media-left">
+                    <i className="fa fa-map"></i>
+                  </div>
+                  <div className="media-body">
+                    <span></span>
+                    <h6>Checkout</h6>
+                  </div>
+                </li>
+                <li className="col-sm-3">
+                  <div className="media-left">
+                    <i className="flaticon-delivery-truck-1"></i>
+                  </div>
+                  <div className="media-body">
+                    <span></span>
+                    <h6>Order Success</h6>
+                  </div>
+                </li>
               </ul>
             </div>
           </div>
 
           {/* Shopping Cart */}
-          <section className="shopping-cart padding-bottom-60">
+          <section className="checkout-section shopping-cart padding-top-30 padding-bottom-60">
             <div className="container">
               <div className="shopping-cart-wrapper">
                 {/* Left Side - Cart Items */}
@@ -241,7 +213,7 @@ const ShoppingCart = () => {
                       className="checkout-btn"
                       style={{ marginTop: "20px" }}
                       disabled={cartProducts.length === 0}
-                      onClick={handelSuccess}
+                      onClick={handleCheckout}
                     >
                       CHECKOUT
                     </button>
@@ -252,15 +224,21 @@ const ShoppingCart = () => {
                     <h4>DELIVERY ADDRESS</h4>
 
                     <div className="address-card">
-                      <h5>{DeliverdAddress?.name}</h5>
-                      <p>{DeliverdAddress?.street}</p>
+                      <h5>{DeliverdAddress?.name || "Primary Address"}</h5>
+                      <p>{DeliverdAddress?.street || "32 Naim Street"}</p>
+                      <p>{DeliverdAddress?.apartment || "Suite #300"}</p>
                       <p>
-                        {DeliverdAddress?.city},{DeliverdAddress?.state},
-                        {DeliverdAddress?.country}
+                        {DeliverdAddress?.city || "Yitc"},
+                        {DeliverdAddress?.state
+                          ? ` ${DeliverdAddress.state}`
+                          : " US-AR"}
+                        ,{DeliverdAddress?.country || " US"}
+                        {DeliverdAddress?.zipCode
+                          ? ` ${DeliverdAddress.zipCode}`
+                          : " 12345"}
                       </p>
-                      <p>{DeliverdAddress?.zipCode}</p>
                       <p style={{ marginTop: "8px", fontWeight: "600" }}>
-                        📞 {DeliverdAddress?.phone}
+                        📞 {DeliverdAddress?.phone || "+1 (555) 555-234"}
                       </p>
                       <span className="address-label">Default</span>
                     </div>
@@ -283,11 +261,16 @@ const ShoppingCart = () => {
             </div>
           </section>
         </>
-      ) : (
-        <>
-          <OrderSuccess />
-        </>
       )}
+
+      {currentPage === "checkout" && (
+        <Checkout
+          onOrderPlaced={handleOrderPlaced}
+          setCurrentPage={setCurrentPage}
+        />
+      )}
+
+      {currentPage === "success" && <OrderSuccess />}
     </div>
   );
 };

@@ -956,7 +956,7 @@ section {
   text-align: center;
   line-height: 44px;
   margin-top: -10px;
-  margin-right: 5px;
+  margin-right: 0px;
   cursor: pointer;
 }
 .product article .cart-btn:hover {
