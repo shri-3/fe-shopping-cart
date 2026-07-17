@@ -213,7 +213,7 @@ const ShoppingCart = () => {
                     </div>
 
                     {/* Promo Code */}
-                    <div
+                    {/* <div
                       style={{
                         marginTop: "20px",
                         paddingTop: "15px",
@@ -234,7 +234,7 @@ const ShoppingCart = () => {
                         <input type="text" placeholder="Enter your code" />
                         <button type="submit">APPLY</button>
                       </div>
-                    </div>
+                    </div> */}
 
                     {/* Checkout Button */}
                     <button
