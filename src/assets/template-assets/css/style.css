@@ -844,6 +844,12 @@ section {
   margin-right: 10px;
   line-height: 36px;
 }
+.shipping-featur-info li i {
+  font-size: 38px;
+  color: #0088cc;
+  margin-right: 3px;
+  line-height: 36px;
+}
 .shipping-info li h5 {
   font-size: 15px;
   margin: 0px;

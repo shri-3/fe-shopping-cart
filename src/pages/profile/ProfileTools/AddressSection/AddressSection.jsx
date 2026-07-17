@@ -12,7 +12,7 @@ const AddressSection = (props) => {
     loading,
     error,
     refetch: fetchData,
-  } = useFetch(`${BE_BASE_URL}/profile/6a5890cc341bcd26277aac5f`, {
+  } = useFetch(`${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`, {
     method: "put",
     lazy: true,
   });
@@ -140,6 +140,23 @@ const AddressSection = (props) => {
       );
     }
   };
+  const handelChangeShip = async (PrimeAddressId) => {
+    const updatePrimeAddress = {
+      ...proData,
+      primaryAddress: PrimeAddressId,
+    };
+
+    try {
+      const newData = await fetchData(updatePrimeAddress);
+      toast.success("Address delete successfully");
+      setProData(newData.data);
+    } catch (error) {
+      toast.error("Database save failed:", error);
+      alert(
+        "Could not save address to database. Please check your connection.",
+      );
+    }
+  };
 
   return (
     <div className="profile-card">
@@ -179,7 +196,11 @@ const AddressSection = (props) => {
               </div>
 
               <div className="address-footer">
-                <a href="#" className="ship-link">
+                <a
+                  href="#"
+                  className="ship-link"
+                  onClick={() => handelChangeShip(addres._id)}
+                >
                   Ship To This Address
                 </a>
               </div>

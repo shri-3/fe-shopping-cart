@@ -3,7 +3,7 @@ import React from "react";
 const ProductShortList = () => {
   return (
     <div className="short-lst">
-      <h2>Cell Phones & Accessories</h2>
+      <h2>All Products</h2>
       <ul>
         <li>
           <p>Showing 1–12 of 756 results</p>

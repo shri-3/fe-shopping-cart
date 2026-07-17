@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./WishlistProduct.css";
 import ProductShortList from "./ProductShortList";
 import { Link } from "react-router";
 import useFetch from "../../../hooks/useFetch";

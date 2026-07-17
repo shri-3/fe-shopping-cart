@@ -15,7 +15,7 @@ const Myprofile = (props) => {
     loading,
     error,
     refetch: fetchData,
-  } = useFetch(`${BE_BASE_URL}/profile/6a5890cc341bcd26277aac5f`, {
+  } = useFetch(`${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`, {
     method: "put",
     lazy: true,
   });

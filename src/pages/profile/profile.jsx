@@ -7,7 +7,7 @@ import useFetch from "../../hooks/useFetch";
 
 const Profile = () => {
   const { data, loading, error, refetch } = useFetch(
-    `${BE_BASE_URL}/profile/6a5890cc341bcd26277aac5f`,
+    `${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`,
   );
   const [proData, setProData] = useState(null);
 

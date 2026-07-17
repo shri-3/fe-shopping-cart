@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./ShoppingCart.css";
 import { useDispatch, useSelector } from "react-redux";
 import {
   decrement,
@@ -12,6 +13,7 @@ import { Link } from "react-router";
 import OrderSuccess from "./OrderSuccess";
 import { BE_BASE_URL } from "../../api/apiService";
 import { toast } from "react-toastify";
+import useFetch from "../../hooks/useFetch";
 
 const ShoppingCart = () => {
   const cartProducts = useSelector(selectCartProducts);
@@ -25,6 +27,15 @@ const ShoppingCart = () => {
   });
 
   const baseURL = `${BE_BASE_URL}/order-history`;
+  const { data, loading, error, refetch } = useFetch(
+    `${BE_BASE_URL}/profile/6a5a18ddc6c2af9485a629b0`,
+  );
+  const filteredAddresses = data?.data?.address?.filter(
+    (addr) => addr._id == data?.data?.primaryAddress,
+  );
+  const DeliverdAddress = filteredAddresses?.[0];
+  console.log(data);
+  console.log(filteredAddresses);
 
   const addProductsToOrder = (newProductsArray) => {
     // setOrderUpdateData((prevOrder) => ({
@@ -102,110 +113,172 @@ const ShoppingCart = () => {
           {/* Shopping Cart */}
           <section className="shopping-cart padding-bottom-60">
             <div className="container">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>Items</th>
-                    <th className="text-center">Price</th>
-                    <th className="text-center">Quantity</th>
-                    <th className="text-center">Total Price </th>
-                    <th>&nbsp; </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {/* Item Cart */}
-                  {cartProducts?.map((product) => (
-                    <tr key={product._id}>
-                      <td>
-                        <div className="media">
-                          <div className="media-left">
-                            <a href="#.">
-                              <img
-                                className="img-responsive"
-                                src={product.imageUrl}
-                                alt=""
-                              />
+              <div className="shopping-cart-wrapper">
+                {/* Left Side - Cart Items */}
+                <div className="cart-items-section">
+                  <h3>Shopping Cart ({cartProducts.length} Items)</h3>
+
+                  <table className="cart-table">
+                    <thead>
+                      <tr>
+                        <th>PRODUCT DETAILS</th>
+                        <th className="text-center">QUANTITY</th>
+                        <th className="text-center">PRICE</th>
+                        <th className="text-center">TOTAL</th>
+                        <th>&nbsp;</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {/* Item Cart */}
+                      {cartProducts?.map((product) => (
+                        <tr key={product._id}>
+                          <td>
+                            <div className="product-item">
+                              <img src={product.imageUrl} alt={product.name} />
+                              <div className="product-info">
+                                <p>{product.name}</p>
+                                <small>Product ID: {product._id}</small>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="text-center">
+                            <div className="qty-control">
+                              <button
+                                onClick={() =>
+                                  dispatch(decrement({ _id: product._id }))
+                                }
+                              >
+                                −
+                              </button>
+                              <span>{product.quantity}</span>
+                              <button
+                                onClick={() =>
+                                  dispatch(increment({ _id: product._id }))
+                                }
+                              >
+                                +
+                              </button>
+                            </div>
+                          </td>
+                          <td className="text-center price-text">
+                            ${product.price?.toFixed(2)}
+                          </td>
+                          <td className="text-center price-text">
+                            ${(product.price * product.quantity).toFixed(2)}
+                          </td>
+                          <td className="text-center">
+                            <a
+                              className="remove-btn"
+                              onClick={() => dispatch(removeFromCart(product))}
+                            >
+                              <i className="fa fa-close"></i>
                             </a>
-                          </div>
-                          <div className="media-body">
-                            <p>{product.name}</p>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-center padding-top-60">
-                        ${product.price?.toFixed(2)}
-                      </td>
-                      <td className="text-center">
-                        <div className="quinty padding-top-20">
-                          <div className="qty-control">
-                            <button
-                              className="btn-round btn-light"
-                              onClick={() =>
-                                dispatch(decrement({ _id: product._id }))
-                              }
-                            >
-                              -
-                            </button>
-                            <span>{product.quantity}</span>
-                            <button
-                              className="btn-round btn-light"
-                              onClick={() =>
-                                dispatch(increment({ _id: product._id }))
-                              }
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                      </td>
-                      <td className="text-center padding-top-60">
-                        ${(product.price * product.quantity).toFixed(2)}
-                      </td>
-                      <td className="text-center padding-top-60">
-                        <a
-                          className="remove"
-                          onClick={() => dispatch(removeFromCart(product))}
-                        >
-                          <i className="fa fa-close"></i>
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
 
-              {/* Promotion */}
-              <div className="promo">
-                <div className="coupen">
-                  <label>
-                    {" "}
-                    Promotion Code
-                    <input type="text" placeholder="Your code here" />
-                    <button type="submit">
-                      <i className="fa fa-arrow-circle-right"></i>
+                  <div className="continue-shopping">
+                    <Link to="/product">
+                      <i className="fa fa-angle-left"></i> Continue Shopping
+                    </Link>
+                  </div>
+                </div>
+
+                {/* Right Side - Order Summary */}
+                <div className="order-summary-section">
+                  {/* Summary Card */}
+                  <div className="summary-card">
+                    <h4>ORDER SUMMARY</h4>
+
+                    <div className="summary-row">
+                      <span>Items:</span>
+                      <strong>{cartProducts.length}</strong>
+                    </div>
+
+                    <div className="summary-row">
+                      <span>Subtotal:</span>
+                      <strong>${totalSum.toFixed(2)}</strong>
+                    </div>
+
+                    <div className="summary-row">
+                      <span>Shipping:</span>
+                      <strong>Standard Delivery - $5.00</strong>
+                    </div>
+
+                    <div className="summary-row total">
+                      <span>TOTAL COST</span>
+                      <span>${(totalSum + 5).toFixed(2)}</span>
+                    </div>
+
+                    {/* Promo Code */}
+                    <div
+                      style={{
+                        marginTop: "20px",
+                        paddingTop: "15px",
+                        borderTop: "1px solid #f0f0f0",
+                      }}
+                    >
+                      <label
+                        style={{
+                          fontSize: "12px",
+                          display: "block",
+                          marginBottom: "8px",
+                          fontWeight: "600",
+                        }}
+                      >
+                        PROMO CODE
+                      </label>
+                      <div className="promo-section">
+                        <input type="text" placeholder="Enter your code" />
+                        <button type="submit">APPLY</button>
+                      </div>
+                    </div>
+
+                    {/* Checkout Button */}
+                    <button
+                      className="checkout-btn"
+                      style={{ marginTop: "20px" }}
+                      disabled={cartProducts.length === 0}
+                      onClick={handelSuccess}
+                    >
+                      CHECKOUT
                     </button>
-                  </label>
-                </div>
+                  </div>
 
-                {/* Grand total */}
-                <div className="g-totel">
-                  <h5>
-                    Grand total: <span>${totalSum.toFixed(2)}</span>
-                  </h5>
-                </div>
-              </div>
+                  {/* Delivery Address Card */}
+                  <div className="summary-card">
+                    <h4>DELIVERY ADDRESS</h4>
 
-              {/* Button */}
-              <div className="pro-btn">
-                {" "}
-                <Link to="/product" className="btn-round btn-light">
-                  Continue Shopping
-                </Link>
-                {cartProducts.length > 0 && (
-                  <a onClick={handelSuccess} className="btn-round">
-                    Checkout
-                  </a>
-                )}
+                    <div className="address-card">
+                      <h5>{DeliverdAddress?.name}</h5>
+                      <p>{DeliverdAddress?.street}</p>
+                      <p>
+                        {DeliverdAddress?.city},{DeliverdAddress?.state},
+                        {DeliverdAddress?.country}
+                      </p>
+                      <p>{DeliverdAddress?.zipCode}</p>
+                      <p style={{ marginTop: "8px", fontWeight: "600" }}>
+                        📞 {DeliverdAddress?.phone}
+                      </p>
+                      <span className="address-label">Default</span>
+                    </div>
+
+                    <div style={{ marginTop: "15px", fontSize: "12px" }}>
+                      <Link
+                        to="/profile"
+                        style={{
+                          color: "#0168b8",
+                          textDecoration: "none",
+                          fontWeight: "600",
+                        }}
+                      >
+                        Change Address
+                      </Link>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>

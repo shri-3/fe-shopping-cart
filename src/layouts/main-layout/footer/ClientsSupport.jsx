@@ -8,27 +8,6 @@ import img5 from "../../../assets/template-assets/images/c-img-5.png";
 const ClientsSupport = () => {
   return (
     <>
-      <section className="light-gry-bg clients-img">
-        <div className="container">
-          <ul>
-            <li>
-              <img src={img1} alt="" />
-            </li>
-            <li>
-              <img src={img2} alt="" />
-            </li>
-            <li>
-              <img src={img3} alt="" />
-            </li>
-            <li>
-              <img src={img4} alt="" />
-            </li>
-            <li>
-              <img src={img5} alt="" />
-            </li>
-          </ul>
-        </div>
-      </section>
       {/* <!-- Newslatter --> */}
       <section className="newslatter">
         <div className="container">

@@ -10,9 +10,9 @@ const MenuBar = () => {
           <div className="cate-lst">
             {" "}
             <a data-toggle="collapse" className="cate-style" href="#cater">
-              <i className="fa fa-list-ul"></i> Our Categories{" "}
+              <i className="fa fa-list-ul"></i> Smart Product
             </a>
-            <div className="cate-bar-in">
+            {/* <div className="cate-bar-in">
               <div id="cater" className="collapse">
                 <ul>
                   <li>
@@ -86,7 +86,7 @@ const MenuBar = () => {
                   </li>
                 </ul>
               </div>
-            </div>
+            </div> */}
           </div>
 
           {/* <!-- Navbar Header --> */}

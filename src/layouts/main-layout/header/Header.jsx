@@ -48,7 +48,8 @@ const Header = () => {
         <div className="container">
           <div className="logo">
             <Link to="/">
-              <img src={logo} alt="" />
+              {/* <img src={logo} alt="" /> */}
+              <h4>Smart Product</h4>
             </Link>
           </div>
           <form className="search-cate" onSubmit={handleSearchSubmit}>
