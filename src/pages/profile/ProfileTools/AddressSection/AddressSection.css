@@ -1,0 +1,188 @@
+.address-container {
+  width: 100%;
+  padding: 20px 0;
+}
+
+.addresses-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+.address-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 25px;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 250px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.address-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.address-content {
+  flex: 1;
+}
+
+.address-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 12px 0;
+}
+
+.address-line {
+  font-size: 14px;
+  color: #666;
+  margin: 6px 0;
+  line-height: 1.5;
+}
+
+.address-phone {
+  font-size: 14px;
+  color: #666;
+  margin-top: 12px;
+  font-weight: 500;
+}
+
+.address-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.ship-link {
+  font-size: 14px;
+  color: #666;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.ship-link:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+/* Form styling inside address-card */
+.address-card form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
+
+.address-card form button {
+  grid-column: 1 / -1;
+}
+
+.address-card input[type="text"],
+.address-card input[type="email"],
+.address-card input[type="tel"],
+.form-control-Edit {
+  padding: 12px 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #f8f8f8;
+  font-size: 14px;
+  color: #333;
+  font-family: inherit;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.address-card input[type="text"]:focus,
+.address-card input[type="email"]:focus,
+.address-card input[type="tel"]:focus,
+.form-control-Edit:focus {
+  outline: none;
+  background-color: #f0f0f0;
+  border-color: #ccc;
+}
+
+.address-card button[type="submit"],
+.address-card button[type="button"] {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.address-card button[type="submit"] {
+  background-color: #008cba;
+  color: white;
+}
+
+.address-card button[type="submit"]:hover {
+  background-color: #006f8a;
+}
+
+.address-card button[type="button"] {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.address-card button[type="button"]:hover {
+  background-color: #e0e0e0;
+}
+
+.profile-add-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 15px;
+}
+
+.profile-add-card .edit-btn {
+  flex-shrink: 0;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .addresses-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .address-card {
+    padding: 20px;
+    min-height: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .address-card {
+    padding: 15px;
+  }
+
+  .address-name {
+    font-size: 16px;
+  }
+
+  .address-line,
+  .address-phone,
+  .ship-link {
+    font-size: 13px;
+  }
+
+  .address-card input[type="text"],
+  .address-card input[type="email"],
+  .address-card input[type="tel"],
+  .form-control-Edit {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+}
+  }
+}

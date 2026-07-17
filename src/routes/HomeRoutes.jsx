@@ -13,6 +13,7 @@ const ShoppingCartLazy = lazy(
 const OrderHistoryLazy = lazy(
   () => import("../pages/OrderHistory/OrderHistory"),
 );
+const ProfileLazy = lazy(() => import("../pages/profile/profile"));
 
 const HomeRoutes = {
   path: "/",
@@ -45,6 +46,10 @@ const HomeRoutes = {
     {
       path: "/order-history",
       element: <OrderHistoryLazy />,
+    },
+    {
+      path: "/profile",
+      element: <ProfileLazy />,
     },
   ],
 };

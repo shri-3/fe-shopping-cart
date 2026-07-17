@@ -300,6 +300,9 @@ const MenuBar = () => {
               <li>
                 <Link to="/order-history">Order </Link>
               </li>
+              <li>
+                <Link to="/profile">Profile </Link>
+              </li>
               {/* <li className="dropdown">
                 {" "}
                 <a
