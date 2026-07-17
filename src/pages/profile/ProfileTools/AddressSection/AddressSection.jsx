@@ -148,7 +148,7 @@ const AddressSection = (props) => {
 
     try {
       const newData = await fetchData(updatePrimeAddress);
-      toast.success("Address delete successfully");
+      toast.success("Shipping address selected successfully");
       setProData(newData.data);
     } catch (error) {
       toast.error("Database save failed:", error);
