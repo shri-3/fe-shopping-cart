@@ -240,7 +240,7 @@ const Myprofile = (props) => {
         </div>
         {!formStatus && (
           <button type="submit" class="btn-round-profile">
-            Checkout
+            Update
           </button>
         )}
       </form>
