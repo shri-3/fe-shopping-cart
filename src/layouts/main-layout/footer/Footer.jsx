@@ -4,7 +4,7 @@ import ClientsSupport from "./ClientsSupport";
 const Footer = () => {
   return (
     <>
-      <ClientsSupport />
+      {/* <ClientsSupport /> */}
       {/* <!-- Footer --> */}
 
       {/* <!-- Rights --> */}

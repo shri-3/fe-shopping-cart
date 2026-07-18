@@ -31,7 +31,7 @@ const MainLayout = ({ children }) => {
   return (
     // ## Page Wrapper
     <div id="wrap" className="layout-1">
-      <TopBar />
+      {/* <TopBar /> */}
 
       <Header />
       {children}
