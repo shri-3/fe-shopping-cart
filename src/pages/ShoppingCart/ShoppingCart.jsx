@@ -8,6 +8,7 @@ import {
   clearCart,
   selectCartSubtotal,
   selectCartProducts,
+  removeWishlistForCart,
 } from "../../redux/slices/cart-product";
 import { Link, useNavigate } from "react-router";
 import OrderSuccess from "./OrderSuccess";
@@ -42,6 +43,37 @@ const ShoppingCart = () => {
     (addr) => addr._id == data?.data?.primaryAddress,
   );
   const DeliverdAddress = filteredAddresses?.[0];
+
+  // Wishlist handler
+  const handelAddWishlist = async (proData) => {
+    console.log(proData);
+    // Add wishlist API call here
+    const proId = { productId: proData._id };
+    fetch(`${BE_BASE_URL}/wishlist`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(proId),
+    })
+      .then(async (response) => {
+        if (!response.ok) {
+          const errData = await response.json();
+          //  Throwing just the message string makes it cleaner to catch
+          throw new Error(errData.error || "Failed to add item to wishlist");
+        }
+        // CRUCIAL: You must keep this return for successful responses!
+        return response.json();
+      })
+      .then((data) => {
+        toast.success("Added to wishlist");
+        dispatch(removeWishlistForCart(proData));
+      })
+      .catch((err) => {
+        // FIX: Use err.message to get just the text string without "Error:"
+        toast.error(err.message);
+      });
+  };
 
   return (
     <div id="content">
@@ -137,6 +169,14 @@ const ShoppingCart = () => {
                           </td>
                           <td className="text-center price-text">
                             ${(product.price * product.quantity).toFixed(2)}
+                          </td>
+                          <td className="text-center">
+                            <a
+                              className="remove-btn"
+                              onClick={() => handelAddWishlist(product)}
+                            >
+                              <i className="fa fa-heart"></i>
+                            </a>
                           </td>
                           <td className="text-center">
                             <a

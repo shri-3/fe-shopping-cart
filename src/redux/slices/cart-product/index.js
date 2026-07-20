@@ -32,6 +32,12 @@ export const cartProductSlice = createSlice({
       );
       toast.error("Item removed from cart");
     },
+    removeWishlistForCart(state, action) {
+      state.cartProductsList = state.cartProductsList.filter(
+        (product) => product._id !== action.payload._id,
+      );
+      // toast.error("Item removed from cart");
+    },
     increment(state, action) {
       const product = state.cartProductsList.find(
         (item) => item._id === action.payload._id,
@@ -64,8 +70,14 @@ export const cartProductSlice = createSlice({
   },
 });
 
-export const { addToCart, removeFromCart, increment, decrement, clearCart } =
-  cartProductSlice.actions;
+export const {
+  addToCart,
+  removeFromCart,
+  removeWishlistForCart,
+  increment,
+  decrement,
+  clearCart,
+} = cartProductSlice.actions;
 
 // Selectors
 export const selectCartProducts = (state) => state.cartProduct.cartProductsList;
